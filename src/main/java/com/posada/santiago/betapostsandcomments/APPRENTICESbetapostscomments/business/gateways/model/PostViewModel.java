@@ -6,7 +6,7 @@ import java.util.List;
 public class PostViewModel {
 
     private String id;
-    private String aggregateId;
+    private String postId;
     private String author;
     private String title;
     private List<CommentViewModel> comments;
@@ -15,12 +15,13 @@ public class PostViewModel {
         this.comments = new ArrayList<>();
     }
 
-    public PostViewModel(String aggregateId, String author, String title, List<CommentViewModel> comments) {
-        this.aggregateId = aggregateId;
+    public PostViewModel(String postId, String author, String title, List<CommentViewModel> comments) {
+        this.postId = postId;
         this.author = author;
         this.title = title;
         this.comments = comments;
     }
+
 
     public String getId() {
         return id;
@@ -31,11 +32,11 @@ public class PostViewModel {
     }
 
     public String getAggregateId() {
-        return aggregateId;
+        return postId;
     }
 
     public void setAggregateId(String aggregateId) {
-        this.aggregateId = aggregateId;
+        this.postId = aggregateId;
     }
 
     public String getAuthor() {

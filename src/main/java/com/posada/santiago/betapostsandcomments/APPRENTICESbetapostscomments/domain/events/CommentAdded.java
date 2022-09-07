@@ -4,20 +4,20 @@ import co.com.sofka.domain.generic.DomainEvent;
 
 public class CommentAdded extends DomainEvent {
 
-    private String id;
+    private String commentID;
     private String author;
     private String content;
 
 
-    public CommentAdded(String id, String author, String content) {
+    public CommentAdded(String commentID, String author, String content) {
         super("posada.santiago.commentcreated");
-        this.id = id;
+        this.commentID = commentID;
         this.author = author;
         this.content = content;
     }
 
     public String getId() {
-        return id;
+        return commentID;
     }
 
     public String getAuthor() {

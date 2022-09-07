@@ -24,7 +24,7 @@ public class CommentViewModel {
         this.postId = postId;
     }
 
-    public String getId() {
+    public String getCommentId() {
         return id;
     }
 

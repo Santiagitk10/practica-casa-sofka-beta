@@ -6,9 +6,14 @@ import com.posada.santiago.betapostsandcomments.APPRENTICESbetapostscomments.bus
 import com.posada.santiago.betapostsandcomments.APPRENTICESbetapostscomments.business.gateways.model.CommentViewModel;
 import com.posada.santiago.betapostsandcomments.APPRENTICESbetapostscomments.business.gateways.model.PostViewModel;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Repository
 public class MongoViewRepository implements DomainViewRepository {
@@ -23,8 +28,10 @@ public class MongoViewRepository implements DomainViewRepository {
     @Override
     public Mono<PostViewModel> findByAggregateId(String aggregateId) {
         /**Make the implementation, using the template, to find a post by its aggregateId*/
-        return null;
+        var query = new Query(Criteria.where("postId").is(aggregateId));
+        return template.findOne(query,PostViewModel.class);
     }
+
 
     @Override
     public Flux<PostViewModel> findAllPosts() {
@@ -35,14 +42,35 @@ public class MongoViewRepository implements DomainViewRepository {
     @Override
     public Mono<PostViewModel> saveNewPost(PostViewModel post) {
         /** make the implementation, using the template, to save a post*/
-        return null;
+        return template.save(post);
     }
 
     @Override
     public Mono<PostViewModel> addCommentToPost(CommentViewModel comment) {
-        /** make the implementation, using the template, to find the post in the database that you want to add the comment to,
-         * then add the comment to the list of comments and using the Update class update the existing post
-         * with the new list of comments*/
-        return null;
+        //make the implementation, using the template, to find the post in the database that you want to add the comment to,
+         //then add the comment to the list of comments and using the Update class update the existing post
+         //with the new list of comments
+        return this.findByAggregateId(comment.getPostId())
+                .flatMap(postViewModel -> {
+                    postViewModel.getComments().add(comment);
+                    System.out.println(postViewModel);
+                    return template.save(postViewModel);
+                });
+
     }
+
+    //Santi Posada Implementation
+    /*@Override
+    public Mono<PostViewModel> addCommentToPost(CommentViewModel comment){
+        var query = new Query(Criteria.where("postId").is(comment.getPostId()));
+        Update update = new Update();
+        return template.findOne(query, PostViewModel.class)
+                .flatMap(postViewModel -> {
+                    List<CommentViewModel> comments = postViewModel.getComments();
+                    comments.add(comment);
+                    update.set("comments", comments);
+                    return template.findAndModify(query, update, PostViewModel.class);
+                });
+    }*/
+
 }
