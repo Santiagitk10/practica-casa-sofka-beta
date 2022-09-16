@@ -5,11 +5,13 @@ package com.posada.santiago.betapostsandcomments.APPRENTICESbetapostscomments.bu
 import com.posada.santiago.betapostsandcomments.APPRENTICESbetapostscomments.application.adapters.repository.MongoViewRepository;
 import com.posada.santiago.betapostsandcomments.APPRENTICESbetapostscomments.business.gateways.model.PostViewModel;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 import java.util.function.Supplier;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BringAllPostsUseCase implements Supplier<Flux<PostViewModel>> {
@@ -18,8 +20,10 @@ public class BringAllPostsUseCase implements Supplier<Flux<PostViewModel>> {
     public final MongoViewRepository repository;
     @Override
     public Flux<PostViewModel> get() {
+        log.info("Finding All posts");
         return this.repository
-                .findAllPosts();
+                .findAllPosts()
+                .doOnError(error -> log.error(String.valueOf(error)));
     }
 
 

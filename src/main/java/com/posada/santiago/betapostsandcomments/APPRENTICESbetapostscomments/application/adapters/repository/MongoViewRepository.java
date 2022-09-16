@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.posada.santiago.betapostsandcomments.APPRENTICESbetapostscomments.business.gateways.DomainViewRepository;
 import com.posada.santiago.betapostsandcomments.APPRENTICESbetapostscomments.business.gateways.model.CommentViewModel;
 import com.posada.santiago.betapostsandcomments.APPRENTICESbetapostscomments.business.gateways.model.PostViewModel;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -15,6 +16,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+@Slf4j
 @Repository
 public class MongoViewRepository implements DomainViewRepository {
     private final ReactiveMongoTemplate template;
@@ -35,8 +37,10 @@ public class MongoViewRepository implements DomainViewRepository {
 
     @Override
     public Flux<PostViewModel> findAllPosts() {
+        log.info("Finding All posts in Mongo");
         /**make the implementation, using the template, of the method find all posts that are stored in the db*/
-        return template.findAll(PostViewModel.class);
+        return template.findAll(PostViewModel.class)
+                .doOnError(error -> log.error(String.valueOf(error)));
     }
 
     @Override

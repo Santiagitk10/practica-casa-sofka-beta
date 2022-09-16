@@ -4,6 +4,7 @@ package com.posada.santiago.betapostsandcomments.APPRENTICESbetapostscomments.ap
 import com.posada.santiago.betapostsandcomments.APPRENTICESbetapostscomments.business.gateways.model.PostViewModel;
 import com.posada.santiago.betapostsandcomments.APPRENTICESbetapostscomments.business.usecases.BringAllPostsUseCase;
 import com.posada.santiago.betapostsandcomments.APPRENTICESbetapostscomments.business.usecases.BringPostById;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -15,13 +16,14 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
+@Slf4j
 @Configuration
 public class QueryHandler {
 
     //Create a route that allows you to make a Get Http request that brings you all the posts and also a post by its id
     @Bean
     public RouterFunction<ServerResponse> getAllPosts(BringAllPostsUseCase bringAllPostsUseCase){
-
+        log.info("Bringing all posts");
         return route(GET("/bringallposts"),
                 request -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
                         .body(BodyInserters.fromPublisher(bringAllPostsUseCase.get(), PostViewModel.class))
@@ -31,7 +33,7 @@ public class QueryHandler {
 
     @Bean
     public RouterFunction<ServerResponse> getPostById(BringPostById bringPostById){
-
+        log.info("Bringing Post By Id");
         return route(GET("/bringpost/{postId}"),
                 request -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
                         .body(BodyInserters.fromPublisher(bringPostById.apply(request.pathVariable("postId")), PostViewModel.class))
